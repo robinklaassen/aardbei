@@ -6,230 +6,306 @@
 	<title>AARDBEI 3.0 - Roostersysteem Anderwijs</title>
 	<link rel="shortcut icon" href="strawberry.ico">
 	<meta name="author" content="Robin Klaassen">
-	
+
 	<!-- load CSS -->
 	<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/yeti/bootstrap.min.css" rel="stylesheet">
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
 	<link rel="stylesheet" href="css/style.css">
-	
+
 </head>
 
 <body>
 
-<!-- Container and root panel -->
-<div class="container">
-	<div id="root" class="panel panel-primary">
-		<!-- Panel head -->
-		<div class="panel-heading">
-			<h2 class="text-center" style="margin: 10px 0;">AARDBEI 3.0 &mdash; rooster voor <span data-bind="text: camp.name"></span> <span data-bind="text: camp.year"></span> <i class="fa fa-fw fa-refresh" data-toggle="tooltip" title="Opnieuw beginnen" data-bind="click: clearCache"></i></h2>
-		</div>
-		
-		<!-- Panel body -->
-		<div class="panel-body">
-			<!-- Navigation -->
-			<ul class="nav nav-tabs nav-justified" role="tablist">
-				<li role="presentation" class="active"><a href="#leden" aria-controls="leden" role="tab" data-toggle="tab">Leiding</a></li>
-				<li role="presentation"><a href="#deelnemers" aria-controls="deelnemers" role="tab" data-toggle="tab">Deelnemers</a></li>
-				<li role="presentation"><a href="#rooster" aria-controls="rooster" role="tab" data-toggle="tab">Rooster</a></li>
-			</ul>
-			
-			<div class="tab-content" style="margin-top:20px;">
-				<!-- Members tab -->
-				<div role="tabpanel" class="tab-pane active" id="leden">
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<!--<th>ID</th>-->
-								<th>Naam</th>
-								<th></th>
-								<th>In het rooster? <i class="fa fa-fw fa-question-circle" data-toggle="tooltip" data-html="true" title="Geel is optioneel, dan wordt de leiding niet automatisch meegeroosterd maar kun je nog wel handmatig vakken naar hem/haar toeslepen"></i></th>
-								<th>Claim vak <i class="fa fa-fw fa-question-circle" data-toggle="tooltip" title="Een vak claimen houdt in dat deelnemers met dat vak als eerst bij jou geplaatst worden"></i></th>
-							</tr>
-						</thead>
-						<tbody data-bind="foreach: { data: members, as: 'member' }">
-							<tr>
-								<!--<td data-bind="text: id"></td>-->
-								<td><a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="Vakdekking" data-html="true" data-bind="text: fullName, attr: {'data-content': coverageString}"></a></td>
-								<td><span class="glyphicon glyphicon-hourglass" data-toggle="tooltip" title="wisselleiding" data-bind="visible: temp==1"></span></td>
-								<td><form class="" role="form">
-								<div class="radio radio-inline radio-success"><input type="radio" value="1" data-bind="attr: {name: 'group'+member.id}, checked: $root.inSchedule[member.id]"><label></label></div>
-								<div class="radio radio-inline radio-warning"><input type="radio" value="2" data-bind="attr: {name: 'group'+member.id}, checked: $root.inSchedule[member.id]"><label></label></div>
-								<div class="radio radio-inline radio-danger"><input type="radio" value="0" data-bind="attr: {name: 'group'+member.id}, checked: $root.inSchedule[member.id]"><label></label></div>
-								</form>
-								</td>
-								<td data-bind="css: { 'has-error': $root.multipleClaimed(id) == true }">
-								<select class="form-control" data-bind="options: $root.coveredCourses(id), optionsText: 'name', optionsValue: 'id', value: $root.claimedCourse[id], optionsCaption: '-'"></select>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-				
-				<!-- Participants tab -->
-				<div role="tabpanel" class="tab-pane" id="deelnemers">
-					<!-- Number of blocks -->
-					<p class="text-center lead">
-						<i class="fa fa-fw fa-minus" data-bind="click: lessBlocks"></i> <span data-bind="text: blocksArray()[blocksArray().length-1]"></span> blokje<span data-bind="visible: blocksArray().length > 1">s</span> <i class="fa fa-fw fa-plus" data-bind="click: moreBlocks"></i>
-					</p>
-					
-					<p class="text-center"><small>
-						Tip: klik op een tabelregel om deze als gedaan te markeren
-					</small></p>
-					
-					<!-- Table for course input -->
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<!--<th>ID</th>-->
-								<th>Naam</th>
-								<th>Klas</th>
-								<!-- ko foreach: blocksArray -->
-									<th>Blokje <span data-bind="text: $data"></span></th>
-								<!-- /ko -->
-							</tr>
-						</thead>
-						<tbody data-bind="foreach: {data: participants, as: 'participant'}">
-							<tr class="highlightable">
-								<!--<td data-bind="text: id"></td>-->
-								<td data-bind="text: fullName"></td>
-								<td><span data-bind="text: level"></span> <span data-bind="text: levelType"></span></td>
-								<!-- ko foreach: $root.blocksArray -->
+	<!-- Container and root panel -->
+	<div class="container">
+		<div id="root" class="panel panel-primary">
+			<!-- Panel head -->
+			<div class="panel-heading">
+				<h2 class="text-center" style="margin: 10px 0;">
+					AARDBEI 3.0 &mdash; rooster voor <span data-bind="text: camp.name"></span>
+					<span data-bind="text: camp.year"></span>
+				</h2>
+			</div>
+
+			<!-- Panel body -->
+			<div class="panel-body">
+
+				<!-- Navigation -->
+				<ul class="nav nav-tabs nav-justified" role="tablist">
+					<li role="presentation" class="active"><a href="#leden" aria-controls="leden" role="tab"
+							data-toggle="tab">Leiding</a></li>
+					<li role="presentation"><a href="#deelnemers" aria-controls="deelnemers" role="tab"
+							data-toggle="tab">Deelnemers</a></li>
+					<li role="presentation"><a href="#rooster" aria-controls="rooster" role="tab"
+							data-toggle="tab">Rooster</a></li>
+				</ul>
+
+				<div class="tab-content" style="margin-top:20px;">
+					<!-- Members tab -->
+					<div role="tabpanel" class="tab-pane active" id="leden">
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<!--<th>ID</th>-->
+									<th>Naam</th>
+									<th></th>
+									<th>In het rooster? <i class="fa fa-fw fa-question-circle" data-toggle="tooltip"
+											data-html="true"
+											title="Geel is optioneel, dan wordt de leiding niet automatisch meegeroosterd maar kun je nog wel handmatig vakken naar hem/haar toeslepen"></i>
+									</th>
+									<th>Claim vak <i class="fa fa-fw fa-question-circle" data-toggle="tooltip"
+											title="Een vak claimen houdt in dat deelnemers met dat vak als eerst bij jou geplaatst worden"></i>
+									</th>
+								</tr>
+							</thead>
+							<tbody data-bind="foreach: { data: members, as: 'member' }">
+								<tr>
+									<!--<td data-bind="text: id"></td>-->
+									<td><a tabindex="0" role="button" data-toggle="popover" data-trigger="focus"
+											title="Vakdekking" data-html="true"
+											data-bind="text: fullName, attr: {'data-content': coverageString}"></a></td>
+									<td><span class="glyphicon glyphicon-hourglass" data-toggle="tooltip"
+											title="wisselleiding" data-bind="visible: temp==1"></span></td>
 									<td>
-										<select class="form-control" data-bind="options: $root.courseArray, optionsText: 'name', optionsValue: 'id', value: $root.courseInput[$data][participant.id], optionsCaption: '-'"></select>
+										<form class="" role="form">
+											<div class="radio radio-inline radio-success"><input type="radio" value="1"
+													data-bind="attr: {name: 'group'+member.id}, checked: $root.inSchedule[member.id]"><label></label>
+											</div>
+											<div class="radio radio-inline radio-warning"><input type="radio" value="2"
+													data-bind="attr: {name: 'group'+member.id}, checked: $root.inSchedule[member.id]"><label></label>
+											</div>
+											<div class="radio radio-inline radio-danger"><input type="radio" value="0"
+													data-bind="attr: {name: 'group'+member.id}, checked: $root.inSchedule[member.id]"><label></label>
+											</div>
+										</form>
 									</td>
-								<!-- /ko -->
-							</tr>
-						</tbody>
-					</table>
-				</div>
-				
-				<!-- Schedule tab -->
-				<div role="tabpanel" class="tab-pane" id="rooster">
-					<!-- Schedule buttons -->
-					<p class="text-right" style="vertical-align:middle;">
-						<span class='text-danger' data-bind="visible: isCurrent()">Invoer gewijzigd, klik om het rooster te updaten <i class="fa fa-fw fa-long-arrow-right"></i></span>
-						<i class="fa fa-fw fa-2x fa-retweet" data-toggle="tooltip" title="Rooster maken" data-bind="click: makeSchedule"></i>
-						<i id="icon-change-view" class="fa fa-fw fa-2x fa-eye" data-toggle="tooltip" title="Weergave veranderen" data-bind="click: toggleSchedule"></i>
-					</p>
-					
-					<p class="text-center" data-bind="visible: scheduleView()"><small>
-						Tip: dubbelklik op een deelnemer om deze te markeren, bijvoorbeeld om aan te geven dat deze niet verplaatst dient te worden
-					</small></p>
-					
-					<!-- Standard view -->
-					<div data-bind="visible: scheduleView()">
-					<!-- ko foreach: {data: $root.blocksArray, as: 'blockID'} -->
-					
-						<hr/>
-						
-						<div class="row">
-							<div class="col-xs-1">
-								<h2 data-bind="text: blockID"></h2>
-							</div>
-							
-							<div class="col-xs-11" style="display:flex; flex-wrap: wrap;">
-								
-								<!-- ko foreach: {data: $root.membersInSchedule, as: 'memberID'} -->
-								<div style="margin: 0 20px;">
-									<h3 data-toggle="tooltip" data-bind="text: $root.getName(memberID,'members','short'), attr: {title: $root.getName(memberID,'members','long'), class: $root.getHClass(blockID,memberID)}"></h3>
-									<!-- ul id="m-{{this}}-{{blockID}}" -->
-									<ul data-bind="sortable: {data: $root.schedule[blockID][memberID], connectClass: 'sch-blk-'+blockID}, attr: {class: 'list-group sch-blk-'+blockID}">
-										<li class="list-group-item" data-toggle="tooltip" data-placement="bottom" data-bind="attr: {title: $root.getName($data,'participants','long')+' ('+$root.getLevel($data)+')', id: 'p-'+$data+'-'+blockID}">
-											<span data-bind="text: $root.getName($data,'participants','short')"></span> (<span data-bind="text: $root.courseCode[$root.courseInput[blockID][$data]()]"></span>)
-										</li>
-									</ul>
-								</div>
-								<!-- /ko -->
-								
-								<!-- ko if: $root.schedule[$data]['0']().length > 0 -->
-								<div style="margin: 0 20px;">
-									<h3 class="text-center text-danger">Ongeplaatst</h3>
-									<ul data-bind="sortable: {data: $root.schedule[blockID]['0'], connectClass: 'sch-blk-'+blockID}, attr: {class: 'list-group sch-blk-'+blockID}">
-										<li class="list-group-item" data-toggle="tooltip" data-placement="bottom" data-bind="attr: {title: $root.getName($data,'participants','long')+' ('+$root.getLevel($data)+')', id: 'p-'+$data+'-'+blockID}">
-											<span data-bind="text: $root.getName($data,'participants','short')"></span> (<span data-bind="text: $root.courseCode[$root.courseInput[blockID][$data]()]"></span>)
-										</li>
-									</ul>
-								</div>
-								<!-- /ko -->
-								
-							</div>
-						</div>
-					
-					<!-- /ko -->
+									<td data-bind="css: { 'has-error': $root.multipleClaimed(id) == true }">
+										<select class="form-control"
+											data-bind="options: $root.coveredCourses(id), optionsText: 'name', optionsValue: 'id', value: $root.claimedCourse[id], optionsCaption: '-'"></select>
+									</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
-					
-					<!-- Alternate view -->
-					<div data-bind="visible: !scheduleView()">
-						<hr/>
-						<div class="clearfix" data-bind="foreach: {data: $root.participantsWithInput, as: 'partID'}">
-							<div class="view-2-item">
-								<h3><span data-toggle="tooltip" data-bind="text: $root.getName(partID,'participants','short'), attr: {title: $root.getName(partID,'participants','long')+' ('+$root.getLevel(partID)+')'}"></span></h3>
-								<ol data-bind="foreach: {data: $root.blocksArray, as: 'blockID'}">
-									<li>
-										<!-- ko if: $root.altSchedule[partID][blockID]() == '' -->
+
+					<!-- Participants tab -->
+					<div role="tabpanel" class="tab-pane" id="deelnemers">
+						<!-- Number of blocks -->
+						<p class="text-center lead">
+							<i class="fa fa-fw fa-minus" data-bind="click: lessBlocks"></i> <span
+								data-bind="text: blocksArray()[blocksArray().length-1]"></span> blokje<span
+								data-bind="visible: blocksArray().length > 1">s</span> <i class="fa fa-fw fa-plus"
+								data-bind="click: moreBlocks"></i>
+						</p>
+
+						<p class="text-center"><small>
+								Tip: klik op een tabelregel om deze als gedaan te markeren
+							</small></p>
+
+						<!-- Table for course input -->
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<!--<th>ID</th>-->
+									<th>Naam</th>
+									<th>Klas</th>
+									<!-- ko foreach: blocksArray -->
+									<th>Blokje <span data-bind="text: $data"></span></th>
+									<!-- /ko -->
+								</tr>
+							</thead>
+							<tbody data-bind="foreach: {data: participants, as: 'participant'}">
+								<tr class="highlightable">
+									<!--<td data-bind="text: id"></td>-->
+									<td data-bind="text: fullName"></td>
+									<td><span data-bind="text: level"></span> <span data-bind="text: levelType"></span>
+									</td>
+									<!-- ko foreach: $root.blocksArray -->
+									<td>
+										<select class="form-control"
+											data-bind="options: $root.courseArray, optionsText: 'name', optionsValue: 'id', value: $root.courseInput[$data][participant.id], optionsCaption: '-'"></select>
+									</td>
+									<!-- /ko -->
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<!-- Schedule tab -->
+					<div role="tabpanel" class="tab-pane" id="rooster">
+						<!-- Schedule buttons -->
+						<p class="text-right" style="vertical-align:middle;">
+							<span class='text-danger' data-bind="visible: isCurrent()">Invoer gewijzigd, klik om het
+								rooster te updaten <i class="fa fa-fw fa-long-arrow-right"></i></span>
+							<i class="fa fa-fw fa-2x fa-retweet" data-toggle="tooltip" title="Rooster maken"
+								data-bind="click: makeSchedule"></i>
+							<i id="icon-change-view" class="fa fa-fw fa-2x fa-eye" data-toggle="tooltip"
+								title="Weergave veranderen" data-bind="click: toggleSchedule"></i>
+						</p>
+
+						<p class="text-center" data-bind="visible: scheduleView()"><small>
+								Tip: dubbelklik op een deelnemer om deze te markeren, bijvoorbeeld om aan te geven dat
+								deze niet verplaatst dient te worden
+							</small></p>
+
+						<!-- Standard view -->
+						<div data-bind="visible: scheduleView()">
+							<!-- ko foreach: {data: $root.blocksArray, as: 'blockID'} -->
+
+							<hr />
+
+							<div class="row">
+								<div class="col-xs-1">
+									<h2 data-bind="text: blockID"></h2>
+								</div>
+
+								<div class="col-xs-11" style="display:flex; flex-wrap: wrap;">
+
+									<!-- ko foreach: {data: $root.membersInSchedule, as: 'memberID'} -->
+									<div style="margin: 0 20px;">
+										<h3 data-toggle="tooltip"
+											data-bind="text: $root.getName(memberID,'members','short'), attr: {title: $root.getName(memberID,'members','long'), class: $root.getHClass(blockID,memberID)}">
+										</h3>
+										<!-- ul id="m-{{this}}-{{blockID}}" -->
+										<ul
+											data-bind="sortable: {data: $root.schedule[blockID][memberID], connectClass: 'sch-blk-'+blockID}, attr: {class: 'list-group sch-blk-'+blockID}">
+											<li class="list-group-item" data-toggle="tooltip" data-placement="bottom"
+												data-bind="attr: {title: $root.getName($data,'participants','long')+' ('+$root.getLevel($data)+')', id: 'p-'+$data+'-'+blockID}">
+												<span
+													data-bind="text: $root.getName($data,'participants','short')"></span>
+												(<span
+													data-bind="text: $root.courseCode[$root.courseInput[blockID][$data]()]"></span>)
+											</li>
+										</ul>
+									</div>
+									<!-- /ko -->
+
+									<!-- ko if: $root.schedule[$data]['0']().length > 0 -->
+									<div style="margin: 0 20px;">
+										<h3 class="text-center text-danger">Ongeplaatst</h3>
+										<ul
+											data-bind="sortable: {data: $root.schedule[blockID]['0'], connectClass: 'sch-blk-'+blockID}, attr: {class: 'list-group sch-blk-'+blockID}">
+											<li class="list-group-item" data-toggle="tooltip" data-placement="bottom"
+												data-bind="attr: {title: $root.getName($data,'participants','long')+' ('+$root.getLevel($data)+')', id: 'p-'+$data+'-'+blockID}">
+												<span
+													data-bind="text: $root.getName($data,'participants','short')"></span>
+												(<span
+													data-bind="text: $root.courseCode[$root.courseInput[blockID][$data]()]"></span>)
+											</li>
+										</ul>
+									</div>
+									<!-- /ko -->
+
+								</div>
+							</div>
+
+							<!-- /ko -->
+						</div>
+
+						<!-- Alternate view -->
+						<div data-bind="visible: !scheduleView()">
+							<hr />
+							<div class="clearfix"
+								data-bind="foreach: {data: $root.participantsWithInput, as: 'partID'}">
+								<div class="view-2-item">
+									<h3><span data-toggle="tooltip"
+											data-bind="text: $root.getName(partID,'participants','short'), attr: {title: $root.getName(partID,'participants','long')+' ('+$root.getLevel(partID)+')'}"></span>
+									</h3>
+									<ol data-bind="foreach: {data: $root.blocksArray, as: 'blockID'}">
+										<li>
+											<!-- ko if: $root.altSchedule[partID][blockID]() == '' -->
 											-
-										<!-- /ko -->
-										
-										<!-- ko if: $root.altSchedule[partID][blockID]() == '0' -->
-											<span class="text-danger">Ongeplaatst</span> (<span data-bind="text: $root.courseCode[$root.courseInput[blockID][partID]()]"></span>)
-										<!-- /ko -->
-										
-										<!-- ko if: parseInt($root.altSchedule[partID][blockID]()) > 0 -->
-											<span data-toggle="tooltip" data-bind="text: $root.getName($root.altSchedule[partID][blockID](),'members','short'), attr: {title: $root.getName($root.altSchedule[partID][blockID](),'members','long')}"></span> (<span data-bind="text: $root.courseCode[$root.courseInput[blockID][partID]()]"></span>)
-										<!-- /ko -->
-									</li>
-								</ol>
+											<!-- /ko -->
+
+											<!-- ko if: $root.altSchedule[partID][blockID]() == '0' -->
+											<span class="text-danger">Ongeplaatst</span> (<span
+												data-bind="text: $root.courseCode[$root.courseInput[blockID][partID]()]"></span>)
+											<!-- /ko -->
+
+											<!-- ko if: parseInt($root.altSchedule[partID][blockID]()) > 0 -->
+											<span data-toggle="tooltip"
+												data-bind="text: $root.getName($root.altSchedule[partID][blockID](),'members','short'), attr: {title: $root.getName($root.altSchedule[partID][blockID](),'members','long')}"></span>
+											(<span
+												data-bind="text: $root.courseCode[$root.courseInput[blockID][partID]()]"></span>)
+											<!-- /ko -->
+										</li>
+									</ol>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+
+		<!-- Footer -->
+		<div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+			<p class="text-left">
+				<span class="btn btn-sm" disabled="true">Onverwachte dingen in deze app?</span>
+				<btn class="btn btn-sm btn-link" data-bind="click: clearCache">Configuratie wissen</btn>
+			</p>
+
+			<!-- (sort of) copyright text -->
+			<p class="text-right" style="font-size:80%;">
+				AARDBEI 3.0 &mdash; van <a href="mailto:robin@anderwijs.nl">Robin</a>, voor <a
+					href="http://www.anderwijs.nl" target="_blank">Anderwijs</a>. <i
+					class="fa fa-fw fa-heart"></i><br />
+				Klik <a href="#" data-toggle="modal" data-target="#infoModal">hier</a> voor meer informatie.
+			</p>
+		</div>
 	</div>
-	<!-- (sort of) copyright text -->
-	<p class="text-right" style="font-size:80%;">
-		AARDBEI 3.0 &mdash; van <a href="mailto:robin@anderwijs.nl">Robin</a>, voor <a href="http://www.anderwijs.nl" target="_blank">Anderwijs</a>. <i class="fa fa-fw fa-heart"></i><br/>
-		Klik <a href="#" data-toggle="modal" data-target="#infoModal">hier</a> voor meer informatie.
-	</p>
-</div>
 
-<!-- Information modal -->
-<div id="infoModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+	<!-- Information modal -->
+	<div id="infoModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
 
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Over AARDBEI 3.0</h4>
-      </div>
-      <div class="modal-body">
-        <p><i>Automatische Anderwijs Roosters, Dus Blokjes Efficiënter Ingepland</i></p>
-		<p>Alweer de derde grote versie van een uit de hand gelopen hobbyproject van Robin Klaassen. Het is gebouwd op het Javascript framework <a href="http://knockoutjs.com/" target="_blank">Knockout</a>, ondersteund door <a href="http://jquery.com/" target="_blank">jQuery</a> en <a href="http://underscorejs.org/" target="_blank">Underscore</a>. De visuele opmaak komt van de <a href="http://getbootstrap.com/" target="_blank">Bootstrap</a> template <a href="http://bootswatch.com/yeti/" target="_blank">Yeti</a>.</p>
-		<p>Er zit een aantal nieuwe features in deze versie. De twee voornaamste zijn het kunnen weergeven van het rooster op twee manieren (per leiding en per deelnemer), en het automatisch opslaan van het rooster en alle invoer middels HTML5 LocalStorage (de moderne variant van cookies). Voor dit laatste is het wel noodzakelijk dat je een goede, up-to-date browser gebruikt (Chrome of Firefox wordt aangeraden).</p>
-		<p>Bug reports, feature requests of andere al dan niet technische vragen of opmerkingen mag je altijd <a href="mailto:robin@anderwijs.nl">mailen</a>.</p>
-		<p>Veel roosterplezier!</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">OK, doei</button>
-      </div>
-    </div>
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Over AARDBEI 3.0</h4>
+				</div>
+				<div class="modal-body">
+					<p><i>Automatische Anderwijs Roosters, Dus Blokjes Efficiënter Ingepland</i></p>
+					<p>Alweer de derde grote versie van een uit de hand gelopen hobbyproject van Robin Klaassen. Het is
+						gebouwd op het Javascript framework <a href="http://knockoutjs.com/"
+							target="_blank">Knockout</a>, ondersteund door <a href="http://jquery.com/"
+							target="_blank">jQuery</a> en <a href="http://underscorejs.org/"
+							target="_blank">Underscore</a>. De visuele opmaak komt van de <a
+							href="http://getbootstrap.com/" target="_blank">Bootstrap</a> template <a
+							href="http://bootswatch.com/yeti/" target="_blank">Yeti</a>.</p>
+					<p>Er zit een aantal nieuwe features in deze versie. De twee voornaamste zijn het kunnen weergeven
+						van het rooster op twee manieren (per leiding en per deelnemer), en het automatisch opslaan van
+						het rooster en alle invoer middels HTML5 LocalStorage (de moderne variant van cookies). Voor dit
+						laatste is het wel noodzakelijk dat je een goede, up-to-date browser gebruikt (Chrome of Firefox
+						wordt aangeraden).</p>
+					<p>Bug reports, feature requests of andere al dan niet technische vragen of opmerkingen mag je
+						altijd <a href="mailto:robin@anderwijs.nl">mailen</a>.</p>
+					<p>Veel roosterplezier!</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">OK, doei</button>
+				</div>
+			</div>
 
-  </div>
-</div>
+		</div>
+	</div>
 
-<!-- load Javascript -->
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script type="text/javascript" src="js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout-sortable/0.11.0/knockout-sortable.min.js"></script>
-<script type="text/javascript" src="js/knockout.localStorage.js"></script>
-<script type="text/javascript" src="js/knockout.reactor.js"></script>
-<script type="text/javascript" src="script.js"></script>
+	<!-- load Javascript -->
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+	<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js">
+	</script>
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
+	<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/knockout-sortable/0.11.0/knockout-sortable.min.js"></script>
+	<script type="text/javascript" src="js/knockout.localStorage.js"></script>
+	<script type="text/javascript" src="js/knockout.reactor.js"></script>
+	<script type="text/javascript" src="script.js"></script>
 
 </body>
 
