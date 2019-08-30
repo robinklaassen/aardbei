@@ -1,0 +1,59 @@
+.highlighted {
+	background-color: palegreen;
+}
+
+.locked {
+	background-color: plum;
+}
+
+.panel {
+	margin-top: 50px;
+}
+
+.table {
+    font-size: inherit;
+}
+
+td {
+	#height: 56px;
+	vertical-align: middle !important;
+}
+
+.fa, .list-group-item, input[type="radio"] {
+	cursor: pointer;
+}
+
+.fa-question-circle, .fa-heart {
+	cursor: auto;
+}
+
+.list-group {
+	font-size: inherit;
+	font-weight: inherit;
+}
+
+.list-group-item {
+	text-align: center;
+}
+
+.view-2-item {
+	float: left;
+	margin-right: 40px;
+}
+
+
+.radio, label {
+	cursor: auto;
+}
+
+ul {
+	min-height: 10px;
+}
+
+ol {
+	padding-left: 22px;
+}
+
+hr {
+	margin: 5px 0;
+}
